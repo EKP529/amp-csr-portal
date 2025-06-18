@@ -1,8 +1,7 @@
-import Link from "next/link";
 // import { auth } from "~/server/auth";
 // import { redirect } from "next/navigation";
 // import type { Session } from "next-auth";
-import { HydrateClient } from "~/trpc/server";
+// import { HydrateClient } from "~/trpc/server";
 import Button from "../_components/button";
 
 export default function HomePage() {
@@ -15,12 +14,13 @@ export default function HomePage() {
   // });
 
   // if (!session?.user) {
+  //   console.log('Session.user: ', session?.user)
   //   // If the user is not authenticated, redirect to the landing page
-  //   redirect("/api/auth/signin");
+  //   redirect("/customers");
   // }
 
   return (
-    <HydrateClient>
+    // <HydrateClient>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#00264B] to-[#0070DA] text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <div className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
@@ -30,14 +30,14 @@ export default function HomePage() {
           <div className="flex flex-col items-center">
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="flex flex-row items-center justify-center">
-                <Button href="/users" text="View All Customers"/>
-                <Button href="/search" text="Find a Customer"/>
+                <Button href="/customers" text="View All Customers"/>
+                <Button href="/customers/search" text="Find a Customer"/>
               </div>
             </div>
           </div>
           <Button href="/api/auth/signout" text="Sign out"/>
         </div>
       </main>
-    </HydrateClient>
+    // </HydrateClient>
   );
 }
