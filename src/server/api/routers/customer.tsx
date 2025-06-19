@@ -7,7 +7,6 @@ import { protectedProcedure, createTRPCRouter } from "../trpc";
 import { db } from "~/server/db";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { format } from "date-fns";
 
 export const customerRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async () => {
