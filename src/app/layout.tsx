@@ -2,8 +2,8 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
-
 import { TRPCReactProvider } from "~/trpc/react";
+import { AppRouterCacheProvider} from "@mui/material-nextjs/v15-appRouter"
 
 export const metadata: Metadata = {
   title: "AMP Customer Service Rep Portal",
@@ -22,7 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+            {children}
+          </AppRouterCacheProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );
