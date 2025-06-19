@@ -3,9 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { api } from "~/trpc/server"
+import Table from "../_components/table";
 
 export default async function UserList() {
-  const users = await api.customer.getAll();
+  const users = await api.customer.getAllDisplay();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#00264B] to-[#0070DA] text-white">
@@ -15,17 +16,7 @@ export default async function UserList() {
         </div>
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-col items-center justify-center gap-4">
-            <div className="text-lg mb-4">User List Page</div>
-            <ul>
-              {users ? users.map((user) => (
-                <li key={user.id}>
-                  <div className="flex flex-row items-center justify-center gap-2 border-amber-950 border-2 rounded-lg p-4 mb-4">
-                    <span className="text-lg font-semibold">{user.name}</span>
-                    <span className="text-sm text-gray-300">{user.email}</span>
-                  </div>
-                </li>
-              )) : <li> No users found</li>}
-            </ul>
+            <Table items={users as object[]} />
           </div>
         </div>
       </div>

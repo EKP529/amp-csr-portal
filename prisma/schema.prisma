@@ -62,11 +62,11 @@ model VerificationToken {
 
 model Customer {
     id            String         @id @default(cuid())
-    email         String         @unique
     name          String
+    email         String         @unique
     phone         String?
     address       String?
-    birthdate     DateTime?
+    birthdate     DateTime       @db.Date
     createdAt     DateTime       @default(now())
     updatedAt     DateTime       @updatedAt
     purchases     Purchase[]
@@ -78,11 +78,12 @@ model Purchase {
     id           String   @id @default(cuid())
     customerId   String
     productId    String
+    productName  String
     quantity     Int
     totalPrice   Float
     purchaseDate DateTime @default(now())
     customer     Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-    product      Product  @relation(fields: [productId], references: [id])
+    product      Product  @relation(fields: [productId, productName], references: [id, name])
 }
 
 model Product {
@@ -90,8 +91,8 @@ model Product {
     name        String
     description String?
     price       Float
-    stock       Int        @default(0)
     purchases   Purchase[]
+    @@unique([id, name])
 }
 
 model Vehicle {

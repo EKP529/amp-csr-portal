@@ -8,7 +8,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 export const metadata: Metadata = {
   title: "AMP Customer Service Rep Portal",
   description: "A portal for customer service representatives to manage customer interactions and support requests.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/amp_favicon.ico" }],
 };
 
 const geist = Geist({

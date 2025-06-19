@@ -7,6 +7,7 @@ import { protectedProcedure, createTRPCRouter } from "../trpc";
 import { db } from "~/server/db";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { format } from "date-fns";
 
 export const customerRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async () => {
@@ -20,6 +21,36 @@ export const customerRouter = createTRPCRouter({
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to fetch customers",
+      });
+    }
+  }),
+  getAllDisplay: protectedProcedure.query(async () => {
+    try {
+      const customers = await db.customer.findMany({
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          address: true,
+          birthdate: true,
+        },
+      });
+      if (customers) {
+        return customers.map((customer) => ({
+          id: customer.id,
+          name: customer.name,
+          email: customer.email,
+          phone: customer.phone,
+          address: customer.address,
+          birthdate: customer.birthdate.toLocaleDateString()
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching customers for display:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch customers for display",
       });
     }
   }),
