@@ -9,7 +9,7 @@ import { customTheme } from "~/styles/theme";
 // import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
-import LoyaltyIcon from "@mui/icons-material/Loyalty";
+import InventoryIcon from '@mui/icons-material/Inventory';
 import Image from "next/image";
 
 export const metadata: Metadata = {
@@ -31,9 +31,9 @@ const navigation: Navigation = [
     icon: <PeopleIcon />,
   },
   {
-    segment: "subscriptions",
-    title: "Subscriptions",
-    icon: <LoyaltyIcon />,
+    segment: "products",
+    title: "Products",
+    icon: <InventoryIcon />,
   },
   {
     segment: "api/auth/signout",
