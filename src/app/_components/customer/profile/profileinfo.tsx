@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { type Customer } from "~/app/_components/customer/customers";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { CurrentCustomerContext } from "~/app/_components/customer/account";
+import { CurrentCustomerContext } from "~/app/(dashboard)/customers/[customer_id]/page";
 import { api } from "~/trpc/react";
 import AlertDialog from "~/app/_components/dialog";
 import CircularProgress from "@mui/material/CircularProgress";
