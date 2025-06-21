@@ -9,6 +9,7 @@ import Link from "next/link";
 import { api } from "~/trpc/react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import dayjs from "dayjs";
 
 export type Customer = {
   id: string;
@@ -73,13 +74,12 @@ export default function CustomerList() {
     email: customer.email,
     phone: customer.phone,
     address: customer.address,
-    birthdate: customer.birthdate.toLocaleDateString(),
+    birthdate: dayjs(customer.birthdate).add(1, 'day').format("MM/DD/YYYY"),
     options: "", // Placeholder for options cell
   }));
 
   return (
     <DataGrid
-      // columnVisibilityModel={{ id: false }}
       rows={customerRows}
       columns={columns}
       showToolbar

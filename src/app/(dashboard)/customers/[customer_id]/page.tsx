@@ -7,6 +7,7 @@ import { useState, createContext, useEffect } from "react";
 import ProfileInfo from "~/app/_components/customer/profile/profileinfo";
 import { type Customer } from "~/app/_components/customer/customers";
 import { api } from "~/trpc/react";
+import CustomerContextProvider from "~/app/_components/customer/profile/customerprovider";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,14 +38,6 @@ function TabProps(index: number) {
   };
 }
 
-export const CurrentCustomerContext = createContext<
-  | {
-      customer: Customer;
-      setCustomer: React.Dispatch<React.SetStateAction<Customer>>;
-    }
-  | undefined
->(undefined);
-
 export default function CustomerAccountPage() {
   const [value, setValue] = useState(0);
   const { customer_id } = useParams<{ customer_id: string }>();
@@ -52,7 +45,7 @@ export default function CustomerAccountPage() {
 
   const customerData = api.customer.getById.useQuery({ id: customer_id })
     .data as Customer;
-
+  const subcriptions = 
   useEffect(() => {
     if (customerData) {
       setCustomer(customerData);
@@ -64,7 +57,7 @@ export default function CustomerAccountPage() {
   };
 
   return (
-    <CurrentCustomerContext value={{ customer, setCustomer }}>
+    <CustomerContextProvider customer={customer} setCustomer={setCustomer}>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -86,6 +79,6 @@ export default function CustomerAccountPage() {
       <CustomTabPanel value={value} index={2}>
         Item Three
       </CustomTabPanel>
-    </CurrentCustomerContext>
+    </CustomerContextProvider>
   );
 }

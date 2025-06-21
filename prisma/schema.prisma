@@ -115,11 +115,17 @@ enum Status {
     EXPIRED
 }
 
+enum SubcriptionType {
+    STANDARD
+    PREMIUM
+    PREMIUM_PLUS
+}
+
 model Subscription {
     id              String    @id @default(cuid())
     customerId      String
     vehicleId       String    @unique
-    plan            String
+    plan            SubcriptionType
     startDate       DateTime  @default(now())
     endDate         DateTime?
     nextBillingDate DateTime?
