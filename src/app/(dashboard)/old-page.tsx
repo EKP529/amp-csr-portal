@@ -1,8 +1,9 @@
 // import { auth } from "~/server/auth";
 // import { redirect } from "next/navigation";
 // import type { Session } from "next-auth";
-// import { HydrateClient } from "~/trpc/server";
-import Button from "../_components/button";
+import Background from "../_components/background";
+import LinkButton from "../_components/linkbutton";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function HomePage() {
   // let session: Session | null | undefined;
@@ -20,24 +21,24 @@ export default function HomePage() {
   // }
 
   return (
-    // <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#00264B] to-[#0070DA] text-white">
+      <Background>
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <div className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Welcome to the <span className="text-[#0070DA]">AMP</span> Customer
-            Service Rep Portal
+          <div className="text-center text-white text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+            <span className="text-[#0070DA]">AMP</span><br/> Customer Service Representative<br/> Portal
           </div>
           <div className="flex flex-col items-center">
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="flex flex-row items-center justify-center">
-                <Button href="/customers" text="View All Customers"/>
-                <Button href="/customers/search" text="Find a Customer"/>
+                <LinkButton href="/customers" text="View All Customers" />
               </div>
             </div>
           </div>
-          <Button href="/api/auth/signout" text="Sign out"/>
+          <LinkButton
+            href="/api/auth/signout"
+            text="Sign out"
+            endIcon={<LogoutIcon />}
+          />
         </div>
-      </main>
-    // </HydrateClient>
+      </Background>
   );
 }

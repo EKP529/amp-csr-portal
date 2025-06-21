@@ -1,0 +1,192 @@
+"use client";
+
+import { useContext, useEffect, useState } from "react";
+import { type Customer } from "~/app/_components/customer/customers";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { CurrentCustomerContext } from "./profile";
+import { api } from "~/trpc/react";
+import AlertDialog from "~/app/_components/dialog";
+import CircularProgress from "@mui/material/CircularProgress";
+
+export default function AccountInfoPage() {
+  const [formData, setFormData] = useState({} as Customer);
+  const [disabled, setDisabled] = useState(true);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const context = useContext(CurrentCustomerContext);
+  const updateCustomer = api.customer.update.useMutation();
+
+  useEffect(() => {
+    if (context?.customer) {
+      setFormData(context.customer);
+      setLoading(false);
+    }
+  }, [context?.customer]);
+
+  const handleEdit = () => {
+    setDisabled(!disabled);
+  };
+  const handleCancel = () => {
+    setDisabled(!disabled);
+    setFormData(context!.customer);
+    setShowCancelDialog(false);
+  };
+
+  const validateFormData = (data: Customer) => {
+    return (
+      data.name &&
+      data.name !== "" &&
+      data.email &&
+      data.email !== "" &&
+      data.birthdate
+    );
+  };
+
+  const handleSave = () => {
+    if (validateFormData(formData)) {
+      updateCustomer.mutate({
+        id: context!.customer.id,
+        data: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          birthdate: formData.birthdate,
+        },
+      });
+      setDisabled(true);
+      context!.setCustomer(formData);
+      setShowSaveDialog(false);
+      alert("Customer updated successfully!");
+    } else {
+      alert("Please fill in all required fields.");
+      setShowSaveDialog(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="mt-40 flex flex-col items-center justify-center">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex w-full flex-col items-center justify-center gap-10 border border-gray-500 py-24 text-center shadow-2xl">
+      <div className="flex flex-col items-center gap-10">
+        <TextField
+          disabled={disabled}
+          required
+          id="customer-name"
+          label="Name"
+          variant="standard"
+          value={formData.name ?? ""}
+          onChange={(e) => {
+            const customerName = e.target.value;
+            if (formData) {
+              setFormData({
+                ...formData,
+                name: customerName,
+              });
+            }
+          }}
+        />
+        <TextField
+          disabled={disabled}
+          required
+          id="customer-email"
+          label="Email"
+          variant="standard"
+          value={formData.email ?? ""}
+          onChange={(e) => {
+            const customerEmail = e.target.value;
+            if (formData) {
+              setFormData({
+                ...formData,
+                email: customerEmail,
+              });
+            }
+          }}
+        />
+        <TextField
+          disabled={disabled}
+          id="customer-phone"
+          label="Phone"
+          variant="standard"
+          value={formData.phone ?? ""}
+          onChange={(e) => {
+            const customerPhone = e.target.value;
+            if (formData) {
+              setFormData({
+                ...formData,
+                phone: customerPhone,
+              });
+            }
+          }}
+        />
+        <TextField
+          disabled={disabled}
+          id="customer-address"
+          label="Address"
+          variant="standard"
+          value={formData.address ?? ""}
+          onChange={(e) => {
+            const customerAddress = e.target.value;
+            if (formData) {
+              setFormData({
+                ...formData,
+                address: customerAddress,
+              });
+            }
+          }}
+        />
+        <TextField
+          disabled={disabled}
+          required
+          id="customer-birthdate"
+          label="Birthday"
+          variant="standard"
+          value={formData.birthdate?.toISOString().split("T")[0] ?? ""}
+          type="date"
+          onChange={(e) => {
+            const birthday = new Date(e.target.value);
+            if (formData) {
+              setFormData({
+                ...formData,
+                birthdate: birthday,
+              });
+            }
+          }}
+        />
+      </div>
+      <div className="flex flex-row justify-end">
+        <Button
+          onClick={disabled ? handleEdit : () => setShowCancelDialog(true)}
+          color={disabled ? undefined : "error"}
+        >
+          {disabled ? "Edit" : "Cancel"}
+        </Button>
+        <AlertDialog
+          title="Unsaved Changes"
+          text="You have unsaved changes. Are you sure you want to cancel?"
+          showDialog={showCancelDialog}
+          onCancel={() => setShowCancelDialog(false)}
+          onConfirm={handleCancel}
+        />
+        <Button onClick={() => setShowSaveDialog(true)} disabled={disabled}>
+          Save
+        </Button>
+        <AlertDialog
+          title="Confirm Updates"
+          text="Are you sure you want to save these changes to the customer?"
+          showDialog={showSaveDialog}
+          onCancel={() => setShowSaveDialog(false)}
+          onConfirm={handleSave}
+        />
+      </div>
+    </div>
+  );
+}

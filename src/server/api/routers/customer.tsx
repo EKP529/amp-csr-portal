@@ -36,14 +36,7 @@ export const customerRouter = createTRPCRouter({
         },
       });
       if (customers) {
-        return customers.map((customer) => ({
-          id: customer.id,
-          name: customer.name,
-          email: customer.email,
-          phone: customer.phone,
-          address: customer.address,
-          birthdate: customer.birthdate.toLocaleDateString()
-        }));
+        return customers;
       }
     } catch (error) {
       console.error("Error fetching customers for display:", error);
@@ -73,6 +66,80 @@ export const customerRouter = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to fetch customer",
+        });
+      }
+    }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          name: z.string().optional(),
+          email: z.string().email().optional(),
+          phone: z.string().optional(),
+          address: z.string().optional(),
+          birthdate: z.date().optional(),
+        }),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const updatedCustomer = await db.customer.update({
+          where: { id: input.id },
+          data: input.data,
+        });
+        return updatedCustomer;
+      } catch (error) {
+        console.error(`Error updating customer with ID ${input.id}:`, error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update customer",
+        });
+      }
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      try {
+        const deletedCustomer = await db.customer.delete({
+          where: { id: input.id },
+        });
+        return deletedCustomer;
+      } catch (error) {
+        console.error(`Error deleting customer with ID ${input.id}:`, error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete customer",
+        });
+      }
+    }),
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        email: z.string().email(),
+        phone: z.string().optional(),
+        address: z.string().optional(),
+        birthdate: z.date(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const newCustomer = await db.customer.create({
+          data: {
+            name: input.name,
+            email: input.email,
+            phone: input.phone,
+            address: input.address,
+            birthdate: input.birthdate,
+          },
+        });
+        return newCustomer;
+      } catch (error) {
+        console.error("Error creating customer:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create customer",
         });
       }
     }),

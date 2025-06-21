@@ -46,7 +46,7 @@ export const authConfig = {
   adapter: PrismaAdapter(db),
   callbacks: {
     redirect: ({ url, baseUrl }) => {
-      return baseUrl + "/home"; // Redirect to the home page after sign-in
+      return baseUrl + "/customers"; // Redirect to the home page after sign-in
     },
     session: ({ session, user }) => ({
       ...session,
