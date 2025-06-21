@@ -1,11 +1,11 @@
 import Background from "~/app/_components/background";
-import CustomerProfilePage from "~/app/_components/customer/profile";
+import CustomerAccountPage from "~/app/_components/customer/account";
 
 export default function UserPage() {
 
   return (
     // <Background>
-      <CustomerProfilePage />
+      <CustomerAccountPage />
     // </Background> 
   );
 }
