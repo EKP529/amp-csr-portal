@@ -1,21 +1,22 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-import { type Customer } from "~/app/_components/customer/customers";
+import { type Customer } from "@prisma/client";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { CurrentCustomerContext } from "~/app/_components/customer/profile/customerprovider";
+import { CurrentCustomerContext } from "~/app/_components/customer/customerprovider";
 import { api } from "~/trpc/react";
 import AlertDialog from "~/app/_components/dialog";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function ProfileInfo() {
+  const context = useContext(CurrentCustomerContext);
   const [formData, setFormData] = useState({} as Customer);
   const [disabled, setDisabled] = useState(true);
+  const [disabledSave, setDisabledSave] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [loading, setLoading] = useState(true);
-  const context = useContext(CurrentCustomerContext);
   const updateCustomer = api.customer.update.useMutation();
 
   useEffect(() => {
@@ -24,6 +25,14 @@ export default function ProfileInfo() {
       setLoading(false);
     }
   }, [context?.customer]);
+
+  useEffect(() => {
+    if (validateFormData(formData)) {
+      setDisabledSave(false);
+    } else {
+      setDisabledSave(true);
+    }
+  }, [formData]);
 
   const handleEdit = () => {
     setDisabled(!disabled);
@@ -51,8 +60,8 @@ export default function ProfileInfo() {
         data: {
           name: formData.name,
           email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
+          phone: formData.phone ?? undefined,
+          address: formData.address ?? undefined,
           birthdate: formData.birthdate,
         },
       });
@@ -68,18 +77,21 @@ export default function ProfileInfo() {
 
   if (loading) {
     return (
-      <div className="mt-40 flex flex-col items-center justify-center">
+      <div className="mt-56 flex flex-col items-center justify-center">
         <CircularProgress />
       </div>
     );
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-10 border border-gray-500 py-24 text-center shadow-2xl">
-      <div className="flex flex-col items-center gap-10">
+    <div className="flex w-full flex-col items-start justify-center gap-10 border border-gray-500 py-24 text-center shadow-2xl px-10">
+      <div className="flex flex-col items-start gap-10 w-full">
         <TextField
           disabled={disabled}
           required
+          fullWidth
+          error={!formData.name || formData.name === ""}
+          helperText={!formData.name || formData.name === "" ? "Name is required" : ""}
           id="customer-name"
           label="Name"
           variant="standard"
@@ -96,7 +108,10 @@ export default function ProfileInfo() {
         />
         <TextField
           disabled={disabled}
+          fullWidth
           required
+          error={!formData.email || formData.email === ""}
+          helperText={!formData.email || formData.email === "" ? "Email is required" : ""}
           id="customer-email"
           label="Email"
           variant="standard"
@@ -113,6 +128,7 @@ export default function ProfileInfo() {
         />
         <TextField
           disabled={disabled}
+          fullWidth
           id="customer-phone"
           label="Phone"
           variant="standard"
@@ -129,6 +145,7 @@ export default function ProfileInfo() {
         />
         <TextField
           disabled={disabled}
+          fullWidth
           id="customer-address"
           label="Address"
           variant="standard"
@@ -146,8 +163,11 @@ export default function ProfileInfo() {
         <TextField
           disabled={disabled}
           required
+          className="w-1/2"
+          error={!formData.birthdate}
+          helperText={!formData.name ? "Date of Birth is required" : ""}
           id="customer-birthdate"
-          label="Birthday"
+          label="Date of Birth"
           variant="standard"
           value={formData.birthdate?.toISOString().split("T")[0] ?? ""}
           type="date"
@@ -162,7 +182,7 @@ export default function ProfileInfo() {
           }}
         />
       </div>
-      <div className="flex flex-row justify-end">
+      <div className="flex flex-row w-full justify-center">
         <Button
           onClick={disabled ? handleEdit : () => setShowCancelDialog(true)}
           color={disabled ? undefined : "error"}
@@ -176,7 +196,7 @@ export default function ProfileInfo() {
           onCancel={() => setShowCancelDialog(false)}
           onConfirm={handleCancel}
         />
-        <Button onClick={() => setShowSaveDialog(true)} disabled={disabled}>
+        <Button onClick={() => setShowSaveDialog(true)} disabled={disabled || disabledSave}>
           Save
         </Button>
         <AlertDialog

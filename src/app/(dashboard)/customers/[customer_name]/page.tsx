@@ -2,12 +2,9 @@
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { useParams } from "next/navigation";
-import { useState, createContext, useEffect } from "react";
+import { useState } from "react";
 import ProfileInfo from "~/app/_components/customer/profile/profileinfo";
-import { type Customer } from "~/app/_components/customer/customers";
-import { api } from "~/trpc/react";
-import CustomerContextProvider from "~/app/_components/customer/profile/customerprovider";
+import SubscriptionList from "~/app/_components/customer/subscriptions/subcriptions";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -40,24 +37,14 @@ function TabProps(index: number) {
 
 export default function CustomerAccountPage() {
   const [value, setValue] = useState(0);
-  const { customer_id } = useParams<{ customer_id: string }>();
-  const [customer, setCustomer] = useState({} as Customer);
-
-  const customerData = api.customer.getById.useQuery({ id: customer_id })
-    .data as Customer;
-  const subcriptions = 
-  useEffect(() => {
-    if (customerData) {
-      setCustomer(customerData);
-    }
-  }, [customerData]);
+  // const subcriptions =
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   return (
-    <CustomerContextProvider customer={customer} setCustomer={setCustomer}>
+    <div className="border-1 border-gray-500 h-screen">
       <Tabs
         value={value}
         onChange={handleChange}
@@ -73,12 +60,16 @@ export default function CustomerAccountPage() {
       <CustomTabPanel value={value} index={0} {...{ className: "w-1/3" }}>
         <ProfileInfo />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Item Two
+      <CustomTabPanel
+        value={value}
+        index={1}
+        {...{ className: "items-center justify-center" }}
+      >
+        <SubscriptionList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three
       </CustomTabPanel>
-    </CustomerContextProvider>
+    </div>
   );
 }

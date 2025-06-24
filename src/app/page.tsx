@@ -3,6 +3,14 @@ import LoginIcon from "@mui/icons-material/Login";
 import Background from "./_components/background";
 
 export default function LandingPage() {
+
+  // if (loading) {
+  //   return (
+  //     <div className="mt-40 flex flex-col items-center justify-center">
+  //       <CircularProgress />
+  //     </div>
+  //   );
+  // }
   return (
     <Background>
       <div className="h-full flex flex-col items-center justify-center gap-12 px-4 py-16">

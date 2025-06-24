@@ -30,7 +30,7 @@ export const customTheme = createTheme({
           main: "#103161",
         },
         background: {
-          default: "#62748E",
+          default: "#6888B8",
           paper: "#003B74",
         },
       },

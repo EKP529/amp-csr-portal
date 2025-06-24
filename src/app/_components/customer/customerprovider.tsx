@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { type Customer } from "~/app/_components/customer/customers";
+import { type Customer } from "@prisma/client";
 
 export const CurrentCustomerContext = createContext<
   | {
