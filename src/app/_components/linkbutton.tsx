@@ -24,6 +24,7 @@ export default function LinkButton({
     <Button
       className="m-1 bg-white/20 px-10 py-3 font-semibold text-white hover:bg-white/40"
       size={size}
+      
       variant="outlined"
       startIcon={startIcon}
       endIcon={endIcon}

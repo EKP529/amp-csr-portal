@@ -5,6 +5,7 @@ import Tab from "@mui/material/Tab";
 import { useState } from "react";
 import ProfileInfo from "~/app/_components/customer/profile/profileinfo";
 import SubscriptionList from "~/app/_components/customer/subscriptions/subcriptions";
+import PurchaseList from "~/app/_components/customer/purchases/purchases";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -44,31 +45,39 @@ export default function CustomerAccountPage() {
   };
 
   return (
-    <div className="border-1 border-gray-500 h-screen">
+    <div className="flex flex-col min-h-screen">
       <Tabs
         value={value}
         onChange={handleChange}
         aria-label="User Tabs"
         centered
         variant="fullWidth"
-        className="border-b border-gray-600"
+        className="border border-gray-500"
       >
         <Tab label="Account" {...TabProps(0)} />
         <Tab label="Subscriptions" {...TabProps(1)} />
         <Tab label="Purchases" {...TabProps(2)} />
       </Tabs>
-      <CustomTabPanel value={value} index={0} {...{ className: "w-1/3" }}>
+      <CustomTabPanel 
+        value={value} 
+        index={0} 
+        {...{ className: "" }}
+      >
         <ProfileInfo />
       </CustomTabPanel>
       <CustomTabPanel
         value={value}
         index={1}
-        {...{ className: "items-center justify-center" }}
+        {...{ className: "" }}
       >
         <SubscriptionList />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
+      <CustomTabPanel 
+        value={value}
+        index={2}
+        {...{ className: "" }}
+      >
+        <PurchaseList />
       </CustomTabPanel>
     </div>
   );

@@ -18,29 +18,6 @@ export const customerRouter = createTRPCRouter({
       });
     }
   }),
-  // getAllDisplay: protectedProcedure.query(async () => {
-  //   try {
-  //     const customers = await db.customer.findMany({
-  //       select: {
-  //         id: true,
-  //         name: true,
-  //         email: true,
-  //         phone: true,
-  //         address: true,
-  //         birthdate: true,
-  //       },
-  //     });
-  //     if (customers) {
-  //       return customers;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching customers for display:", error);
-  //     throw new TRPCError({
-  //       code: "INTERNAL_SERVER_ERROR",
-  //       message: "Failed to fetch customers for display",
-  //     });
-  //   }
-  // }),
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {

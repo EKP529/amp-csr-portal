@@ -1,6 +1,7 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { customerRouter } from "./routers/customer";
 import { subscriptionRouter } from "./routers/subscription";
+import { purchaseRouter } from "./routers/purchase";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { subscriptionRouter } from "./routers/subscription";
 export const appRouter = createTRPCRouter({
   customer: customerRouter,
   subscription: subscriptionRouter,
+  purchase: purchaseRouter,
 
 });
 

@@ -55,7 +55,7 @@ export const subscriptionRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        status: z.enum(["ACTIVE", "CANCELED", "EXPIRED"]).optional(),
+        status: z.enum(["ACTIVE", "CANCELED", "EXPIRED", "OVERDUE"]).optional(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
         nextBillingDate: z.date().optional(),
@@ -129,6 +129,9 @@ export const subscriptionRouter = createTRPCRouter({
       plan: z.enum(["STANDARD", "PREMIUM", "PREMIUM_PLUS"]),
       customerId: z.string(),
       vehicleId: z.string(),
+      productId: z.string(),
+      productPrice: z.number().min(0),
+      productName: z.string(),
     }))
     .mutation(async ({ input }) => {
       try {
@@ -144,6 +147,15 @@ export const subscriptionRouter = createTRPCRouter({
           vehicle: {
             connect: { id: input.vehicleId },
           },
+          purchase: {
+            create: {
+              productId: input.productId,
+              customerId: input.customerId,
+              productName: input.productName,
+              productPrice: input.productPrice,
+              quantity: 1,
+            }
+          }
         };
         const newSubscription = await db.subscription.create({
           data: createData,
@@ -174,6 +186,9 @@ export const subscriptionRouter = createTRPCRouter({
         licensePlate: z.string(),
       }),
       customerId: z.string(),
+      productId: z.string(),
+      productPrice: z.number().min(0),
+      productName: z.string(),
     }))
     .mutation(async ({ input }) => {
       try {
@@ -193,6 +208,15 @@ export const subscriptionRouter = createTRPCRouter({
           },
           customer: {
             connect: { id: input.customerId },
+          },
+          purchase: {
+            create: {
+              productName: input.productName,
+              productPrice: input.productPrice,
+              quantity: 1,
+              customerId: input.customerId,
+              productId: input.productId,
+            }
           }
         } 
         const newSubscription = await db.subscription.create({

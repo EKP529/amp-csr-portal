@@ -97,7 +97,7 @@ export default function SubscriptionList() {
   }));
 
   return (
-    <div className="h-full w-full items-center gap-12">
+    <div className="flex flex-col h-full w-full items-center justify-center">
       {showForm.editSubscription ? (
         <SubscriptionForm
           subscriptionData={subscriptionData}
